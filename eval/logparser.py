@@ -20,6 +20,7 @@ def parse(p_file):
     skip = False
     last_time = None
     for line in p_file:
+        if('PARAMS' in line): break
         if(skip):
             skip = False
             continue
@@ -29,6 +30,8 @@ def parse(p_file):
             last_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(args[2], "%d %m %Y %H-%M-%S")))
             skip = True
         if 'Spiel Vorbei\n' in args:
+            current_game.avg_del /= current_game.score
+            current_game.avg_get /= (current_game.score + current_game.lost_c)
             games.append(copy.deepcopy(current_game))
             current_game = None
         if 'SC' in args:
@@ -48,11 +51,32 @@ def parse(p_file):
 
     return games
 
+def calcAVG(games):
+    score = 0
+    lost_count = 0
+    avg_get = datetime.timedelta()
+    avg_del = datetime.timedelta()
+
+    for game in games:
+        score += game.score
+        lost_count += game.lost_c
+        avg_get += game.avg_get
+        avg_del += game.avg_del
+
+    score /= len(games)
+    lost_count /= len(games)
+    avg_del /= len(games)
+    avg_get /= len(games)
+    return [score, lost_count, avg_get, avg_del]
+
+def printLog(date):
+    for game in data:
+        print('Score:',game.score, '\nLost_count:', game.lost_c, '\nAVG_get:', game.avg_get, '\nAVG_del:', game.avg_del)
+
 
 if __name__ == "__main__":
     f = open('eval/base-rand.log')
     data = parse(f)
 
-    print('Games:', len(data))
-    for game in data:
-        print('Score:',game.score, '\nLost_count:', game.lost_c, '\nAVG_get:', game.avg_get, '\nAVG_del:', game.avg_del)
+    for i in calcAVG(data):
+        print(i)

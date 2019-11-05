@@ -6,6 +6,28 @@ This is a multiplayer version of Pacman playing in the real world. This is just 
 
 You have to get an deliver packages.
 
+## Install and Lunch
+
+Download the repro and install the requirements.
+
+You need the following libs to play:
+
+* numpy
+* osmium
+* osmread
+* pandas
+* pygame
+* pyproj
+* PodSixNet
+* IPy
+* networkx
+* configparser
+* pygame-Menu
+* requests
+* networkx
+* matplotlib
+
+You can type `pip install -r requirments.txt`  to install all needed libs.
 ## Maps
 
 There are some maps alrady generated. You also can genarate new maps. All you need is a OpenStreetMap (OSM) File and then zip it.
