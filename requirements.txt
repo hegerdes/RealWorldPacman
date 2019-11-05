@@ -1,0 +1,16 @@
+## file for external dependencies
+
+numpy
+osmium
+osmread
+pandas
+pygame
+pyproj
+PodSixNet
+IPy
+networkx
+configparser
+pygame-Menu
+requests
+networkx
+matplotlib

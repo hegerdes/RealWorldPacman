@@ -1,0 +1,15 @@
+model=RandomStreet
+ignore=3600.0
+randomSeed=1570636568471
+duration=6000.0
+nn=20
+circular=false
+J=2D
+boundingBox=8.02001953 52.2681573 8.052978515 52.28832258
+clippingMethod=0
+rsMetric=Pedestrian
+osmFile=os-small.osm.pbf
+rsURL=http://127.0.0.1:5000
+distFile=null
+maxPause=0.0
+speed=2.0 10.0
