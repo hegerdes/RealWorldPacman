@@ -11,10 +11,11 @@ import tools.osmparser as OSMP
 import tools.gettiles as gettiles
 import tools.RandomPackages as RandomPackages
 import tools.Geo2GameCoords as Geo2GameCoords
+import tools.wayrenderer as tracerender
 from tools.movementbylines import MovementLines
 from tools.movementbyai import MovementAI
-import tools.wayrenderer as tracerender
 from tools.bounds import Bounds
+from tools.RaLaNSData import RaLaNSData
 from Client import Client
 from tools.player import Player
 import tools.Package as Package
@@ -66,6 +67,7 @@ class Pacman:
         # self.main_menu.main()
 
         self.GAMETIME = 300
+        self.draw_RaLaNS = False
         self.score = None
         self.start_ticks = None
 
@@ -104,6 +106,7 @@ class Pacman:
             TILES_DIM = int(config['MAP_CONF']['TILES_DIM'])
             TILES_SIZE = int(config['MAP_CONF']['TILES_SIZE'])
             self.GAMETIME = int(config['MAP_CONF']['TIME'])
+            self.draw_RaLaNS = bool(config['MAP_CONF']['DRAW_RALANS'])
             WIDTH = TILES_DIM * TILES_SIZE
             HEIGHT = TILES_DIM * TILES_SIZE
         except KeyError:
@@ -140,6 +143,12 @@ class Pacman:
 
         self.ghost_image = pygame.image.load('images/ghost.png').convert_alpha()
         self.warn_img = pygame.image.load('images/warning.png').convert_alpha()
+
+        if(self.draw_RaLaNS):
+            zip_name = 'RaLaNS-Data/osna4km2_header_config.zip'
+            hdf5_name = 'RaLaNS-Data/\'osna4km2\'.hdf5'
+            utm_zone = 32
+            self.ralans_data = RaLaNSData(zip_name, hdf5_name, utm_zone)
 
         self.joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
         for joy in self.joysticks:
@@ -233,22 +242,55 @@ class Pacman:
 
 
     def drawPackages(self):
-        for i, p in enumerate(self.client.packageList):
-            pygame.draw.circle(self.tils_display, RED, (int(p[0]), int(p[1])), Package.threshold_distance, LINE_THICK)
+        for i, pos in enumerate(self.client.packageList):
+            if not self.draw_RaLaNS:
+                pygame.draw.circle(self.tils_display, RED, (int(pos[0]), int(pos[1])), Package.threshold_distance, LINE_THICK)
+            else:
+                trans = self.ralans_data.get_closest_transmitter_id(self.transformation.detransform(pos[0], pos[1]))
+                rec = self.ralans_data.get_receivers(trans)
+
+                # transmitter index to receiver indices
+                rec_line = trans // self.ralans_data.header["size_x"]
+                rec_row = trans % self.ralans_data.header["size_x"]
+
+                range_meter = 10
+                close = list()
+                far = list()
+                for y in range(rec_line - range_meter, rec_line + range_meter, 2):
+                    for x in range(rec_row - range_meter, rec_row + range_meter, 2):
+
+                        if 0 < y < len(rec) and 0 < x < len(rec[y]):
+                            if rec[y][x] > Package.threshold_signal:
+
+                                # receiver index to transmitter index
+                                t_id = y * self.ralans_data.header["size_x"] + x
+                                # get position from transmitter index
+                                c = self.ralans_data.get_coords_from_id(t_id)
+                                place = self.transformation.transform(c[0], c[1])
+                                # draw
+                                if rec[y][x] > Package.threshold_signal / 1.5: close.append(place)
+                                else: far.append(place)
+
+                for place in close:
+                    pygame.draw.circle(self.tils_display, RED, (int(place[0]), int(place[1])), 5, 1)
+                for place in far:
+                    pygame.draw.circle(self.tils_display, BLUE, (int(place[0]), int(place[1])), 5, 1)
+
             if self.client.progress_packages and len(self.client.progress_packages) > i:
                 for progress in self.client.progress_packages[i]:
                     progress = progress / Package.threshold_carried * Package.threshold_distance
-                    if progress > 1:
-                        pygame.draw.circle(self.tils_display, CYAN, (int(p[0]), int(p[1])), int(progress), 1)
+                    if progress > 2:
+                        pygame.draw.circle(self.tils_display, CYAN, (int(pos[0]), int(pos[1])), int(progress), 2)
+                        pygame.draw.circle(self.tils_display, RED, (int(pos[0]), int(pos[1])), Package.threshold_distance, 2)
+
 
         if self.client.destination:
-            pygame.draw.circle(self.tils_display, BLUE, (int(self.client.destination[0]), int(self.client.destination[1])),
-                            Package.threshold_distance, LINE_THICK)
-            if self.client.progress_destination:
-                progress = self.client.progress_destination / Package.threshold_carried * Package.threshold_distance
-                if progress > 1:
-                    pygame.draw.circle(self.tils_display, GREEN, (int(self.client.destination[0]), int(self.client.destination[1])),int(progress), 1)
-
+                    pygame.draw.circle(self.tils_display, BLUE, (int(self.client.destination[0]), int(self.client.destination[1])),
+                                    Package.threshold_distance, LINE_THICK)
+                    if self.client.progress_destination:
+                        progress = self.client.progress_destination / Package.threshold_carried * Package.threshold_distance
+                        if progress > 1:
+                            pygame.draw.circle(self.tils_display, GREEN, (int(self.client.destination[0]), int(self.client.destination[1])),int(progress), 1)
 
     def drawScore(self):
         if self.client.gamestarted:
@@ -263,8 +305,11 @@ class Pacman:
     def drawTimer(self):
         if(self.start_ticks):
             seconds = (pygame.time.get_ticks() - self.start_ticks)/1000
-            countdown = self.myfont.render('Time: ' + str(self.GAMETIME - seconds), True, BLACK)
-            self.tils_display.blit(countdown, (WIDTH - 110, HEIGHT - 15))
+            try:
+                countdown = self.myfont.render('Time: ' + str(self.GAMETIME - seconds)[:6], True, BLACK)
+                self.tils_display.blit(countdown, (WIDTH - 110, HEIGHT - 15))
+            except IndexError:
+                pass
 
 
     def draw(self):
@@ -293,7 +338,7 @@ class Pacman:
         line_movement = None
         ai_movement = None
         if(useAI):
-            ai_movement = MovementAI(self.player,self.transformation,self.client, self.tils_display, True)
+            ai_movement = MovementAI(self.player,self.transformation,self.client, self.tils_display)
         else:
             line_movement = MovementLines(self.player, rendered_line_map, WIDTH, HEIGHT)
 
@@ -344,8 +389,8 @@ class Pacman:
 if __name__ == "__main__":
     if(len(os.path.dirname(__file__)) > 0):
         os.chdir(os.path.dirname(__file__))
-    logging.basicConfig(filename='eval/base-rand.log', level=logging.INFO,)
+    logging.basicConfig(filename='eval/ghost+6-rand.log', level=logging.INFO,)
 
     pacmanGame = Pacman()
-    pacmanGame.GameLoop(True)
+    pacmanGame.GameLoop()
 

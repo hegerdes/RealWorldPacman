@@ -75,8 +75,12 @@ def printLog(date):
 
 
 if __name__ == "__main__":
-    f = open('eval/base-rand.log')
-    data = parse(f)
 
-    for i in calcAVG(data):
-        print(i)
+    logs = ['eval/base-rand.log','eval/ghost+2-rand.log']
+
+    for log in logs:
+        f = open(log)
+        data = parse(f)
+
+        for i in calcAVG(data):
+            print(i)

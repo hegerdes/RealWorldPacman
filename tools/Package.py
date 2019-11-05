@@ -1,12 +1,12 @@
-#import pgzrun
 import math
 import time
-""" 
+"""
 Defines Package class which capsulates the transmitting mechanics for packages.
 """
 
 threshold_carried = 180
 threshold_distance = 50
+threshold_signal = -33
 
 
 def calculateDistance(x1, y1, x2, y2):

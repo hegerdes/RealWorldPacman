@@ -14,3 +14,5 @@ pygame-Menu
 requests
 networkx
 matplotlib
+h5py
+h5py_cache
