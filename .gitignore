@@ -1,6 +1,5 @@
 #Files to ignore
 .vscode/*
-scenarios/*
 
 clientsettings.pickle
 
