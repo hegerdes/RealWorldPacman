@@ -30,8 +30,14 @@ def parse(p_file):
             last_time = datetime.datetime.fromtimestamp(time.mktime(time.strptime(args[2], "%d %m %Y %H-%M-%S")))
             skip = True
         if 'Spiel Vorbei\n' in args:
-            current_game.avg_del /= current_game.score
-            current_game.avg_get /= (current_game.score + current_game.lost_c)
+            if(current_game.score > 0):
+                current_game.avg_del /= current_game.score
+            else:
+                current_game.avg_del = datetime.timedelta(minutes=5)
+            if(current_game.score + current_game.lost_c > 0):
+                current_game.avg_get /= (current_game.score + current_game.lost_c)
+            else:
+                current_game.avg_get = datetime.timedelta(minutes=5)
             games.append(copy.deepcopy(current_game))
             current_game = None
         if 'SC' in args:
@@ -76,9 +82,16 @@ def printLog(date):
 
 if __name__ == "__main__":
 
-    logs = ['eval/base-rand.log','eval/ghost+2-rand.log']
+    logs_rand_num = ['eval/rand/ghost_num/base-rand.log','eval/rand/ghost_num/ghost+2-rand.log', 'eval/rand/ghost_num/ghost+4-rand.log', 'eval/rand/ghost_num/ghost+6-rand.log', 'eval/rand/ghost_num/ghost+8-rand.log']
 
+    logs_rand_pasue = ['eval/rand/ghost_pause/pause_base.log','eval/rand/ghost_pause/pause_2000.log', 'eval/rand/ghost_pause/pause_4000.log']
+
+    logs_rand_speed = ['eval/rand/ghost_speed/speed_0_8.log', 'eval/rand/ghost_speed/speed_base.log', 'eval/rand/ghost_speed/speed_4_12.log', 'eval/rand/ghost_speed/speed_6_14.log']
+
+    logs = logs_rand_pasue
+    logs = logs_rand_speed
     for log in logs:
+        print(log)
         f = open(log)
         data = parse(f)
 

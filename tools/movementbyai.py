@@ -18,6 +18,7 @@ class MovementAI():
         self.package_change_count = 0
         self.player = player
         self.transformation = tran
+        self.surface = surface
         self.client = client
         self.package_pos = None
         self.dest_way = None
@@ -38,6 +39,7 @@ class MovementAI():
                 logger.info(c_time + ':GP:Got package:<POS ' + str(self.transform2Geo(player_pos)) + ' TO ' + str(self.transform2Geo(destin_pos)) + 'POS>')
                 self.dest_way = self.getRoute(self.createOSRMquery(self.transform2Geo(player_pos), self.transform2Geo(destin_pos)))
             self.package_pos = None
+            self.drawWay()
             if(self.cheat):
                 self.moveTo(self.dest_way)
             else:
@@ -57,6 +59,8 @@ class MovementAI():
                 self.way = self.getRoute(self.createOSRMquery(self.transform2Geo(player_pos), self.transform2Geo(self.package_pos)))
             else:
                 self.package_change_count = 0
+
+            self.drawWay()
 
             if(self.cheat):
                 self.moveTo(self.way)
@@ -191,3 +195,9 @@ class MovementAI():
 
         if(len(way) > 1):
             way.pop(0)
+
+    def drawWay(self):
+        if(self.way and len(self.way) > 1):
+            pygame.draw.lines(self.surface, (0,0,255), False, self.way, 4)
+        elif(self.dest_way and len(self.dest_way) > 1):
+            pygame.draw.lines(self.surface, (0,0,255), False, self.dest_way, 4)

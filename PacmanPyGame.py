@@ -15,6 +15,7 @@ import tools.wayrenderer as tracerender
 from tools.movementbylines import MovementLines
 from tools.movementbyai import MovementAI
 from tools.bounds import Bounds
+from distutils.util import strtobool
 from tools.RaLaNSData import RaLaNSData
 from Client import Client
 from tools.player import Player
@@ -106,7 +107,7 @@ class Pacman:
             TILES_DIM = int(config['MAP_CONF']['TILES_DIM'])
             TILES_SIZE = int(config['MAP_CONF']['TILES_SIZE'])
             self.GAMETIME = int(config['MAP_CONF']['TIME'])
-            self.draw_RaLaNS = bool(config['MAP_CONF']['DRAW_RALANS'])
+            self.draw_RaLaNS = strtobool(config['MAP_CONF']['DRAW_RALANS'])
             WIDTH = TILES_DIM * TILES_SIZE
             HEIGHT = TILES_DIM * TILES_SIZE
         except KeyError:
@@ -389,8 +390,8 @@ class Pacman:
 if __name__ == "__main__":
     if(len(os.path.dirname(__file__)) > 0):
         os.chdir(os.path.dirname(__file__))
-    logging.basicConfig(filename='eval/ghost+6-rand.log', level=logging.INFO,)
+    logging.basicConfig(filename='eval/mslaw_base.log', level=logging.INFO,)
 
     pacmanGame = Pacman()
-    pacmanGame.GameLoop()
+    pacmanGame.GameLoop(True)
 
