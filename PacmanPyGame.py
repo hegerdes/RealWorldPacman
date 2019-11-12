@@ -393,5 +393,5 @@ if __name__ == "__main__":
     # logging.basicConfig(filename='game.log', level=logging.INFO,)
 
     pacmanGame = Pacman()
-    pacmanGame.GameLoop(True)
+    pacmanGame.GameLoop()
 
