@@ -65,7 +65,7 @@ class Pacman:
         self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
         self.tils_display = pygame.display.set_mode((WIDTH, HEIGHT), self.flags)
         self.main_menu = menu.Menu(self.tils_display, WIDTH, HEIGHT)
-        # self.main_menu.main()
+        self.main_menu.main()
 
         self.GAMETIME = 300
         self.draw_RaLaNS = False
