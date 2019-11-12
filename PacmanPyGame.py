@@ -390,7 +390,7 @@ class Pacman:
 if __name__ == "__main__":
     if(len(os.path.dirname(__file__)) > 0):
         os.chdir(os.path.dirname(__file__))
-    logging.basicConfig(filename='eval/mslaw_base.log', level=logging.INFO,)
+    # logging.basicConfig(filename='game.log', level=logging.INFO,)
 
     pacmanGame = Pacman()
     pacmanGame.GameLoop(True)

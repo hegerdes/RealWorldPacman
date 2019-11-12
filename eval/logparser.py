@@ -88,8 +88,17 @@ if __name__ == "__main__":
 
     logs_rand_speed = ['eval/rand/ghost_speed/speed_0_8.log', 'eval/rand/ghost_speed/speed_base.log', 'eval/rand/ghost_speed/speed_4_12.log', 'eval/rand/ghost_speed/speed_6_14.log']
 
-    logs = logs_rand_pasue
-    logs = logs_rand_speed
+    logs_mslaw_num = ['eval/mslaw/ghost_num/mslaw_base.log', 'eval/mslaw/ghost_num/ghost+2-mslaw.log', 'eval/mslaw/ghost_num/ghost+4-mslaw.log', 'eval/mslaw/ghost_num/ghost+6-mslaw.log']
+
+    logs_mslaw_speed = ['eval/mslaw/ghost_num/mslaw_base.log', 'eval/mslaw/ghost_speed/speed_0_8-mslaw.log', 'eval/mslaw/ghost_speed/speed_4_12-mslaw.log']
+
+    logs_mslaw_cluster_ratio = ['eval/mslaw/cluster_ratio/mslaw_base.log','eval/mslaw/cluster_ratio/cluster_ratio_10.log', 'eval/mslaw/cluster_ratio/cluster_ratio_15.log', 'eval/mslaw/cluster_ratio/cluster_ratio_2.log']
+
+    logs_mslaw_cluster_range = ['eval/mslaw/cluster_range/mslaw_base.log','eval/mslaw/cluster_range/cluster_range_20.log', 'eval/mslaw/cluster_range/cluster_range_30.log', 'eval/mslaw/cluster_range/cluster_range_40.log', 'eval/mslaw/cluster_range/cluster_range_50.log']
+
+    logs_mslaw_waypoint_num = ['eval/mslaw/numWaypoints/mslaw_base.log', 'eval/mslaw/numWaypoints/waypoints_200.log']
+
+    logs = logs_mslaw_waypoint_num
     for log in logs:
         print(log)
         f = open(log)
