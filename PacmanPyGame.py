@@ -65,7 +65,7 @@ class Pacman:
         self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
         self.tils_display = pygame.display.set_mode((WIDTH, HEIGHT), self.flags)
         self.main_menu = menu.Menu(self.tils_display, WIDTH, HEIGHT)
-        # self.main_menu.main()
+        self.main_menu.main()
 
         self.GAMETIME = 300
         self.draw_RaLaNS = False
@@ -390,8 +390,12 @@ class Pacman:
 if __name__ == "__main__":
     if(len(os.path.dirname(__file__)) > 0):
         os.chdir(os.path.dirname(__file__))
-    # logging.basicConfig(filename='game.log', level=logging.INFO,)
+    logging.basicConfig(filename='settings/Pacman.log', level=logging.INFO,)
+
+    use_ai = False
+    if(len(sys.argv) > 1 and sys.argv[1] == 'ai'):
+        use_ai = True
 
     pacmanGame = Pacman()
-    pacmanGame.GameLoop()
+    pacmanGame.GameLoop(use_ai)
 

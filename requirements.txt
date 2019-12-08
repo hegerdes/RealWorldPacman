@@ -15,4 +15,5 @@ requests
 networkx
 matplotlib
 h5py
+logging
 h5py_cache
