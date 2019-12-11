@@ -6,7 +6,6 @@ clientsettings.pickle
 #caches
 *.cache
 *.pyc
-*.log
 
 #Map pictures
 images/map_*.png
