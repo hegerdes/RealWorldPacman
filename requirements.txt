@@ -15,5 +15,6 @@ requests
 networkx
 matplotlib
 h5py
-logging
+progress
+scipy
 h5py_cache

@@ -4,7 +4,6 @@ import os
 import sys
 import tarfile
 import time
-import logging
 import pickle
 import configparser
 import tools.osmparser as OSMP
@@ -49,7 +48,6 @@ lines_prerendered = False
 rendered_tiles_map = None
 rendered_line_map = None
 
-logger = logging.getLogger(__name__)
 
 class Pacman:
 
@@ -328,8 +326,6 @@ class Pacman:
             if(self.score != self.client.scoreboard):
                 self.score = self.client.scoreboard
                 c_time = time.strftime("%d %m %Y %H-%M-%S", time.gmtime())
-                logger.info(c_time + ':SC:' + str(self.client.scoreboard))
-
 
     def GameLoop(self, useAI = False):
         #Initial draw
@@ -381,7 +377,6 @@ class Pacman:
             if(self.client.roundEnded):
                 self.drawEnd()
                 c_time = time.strftime("%d %m %Y %H-%M-%S", time.gmtime())
-                logger.info(c_time + ':EG:Spiel Vorbei')
                 print('Spiel Vorbei!\n')
                 time.sleep(5)
                 break
@@ -390,7 +385,6 @@ class Pacman:
 if __name__ == "__main__":
     if(len(os.path.dirname(__file__)) > 0):
         os.chdir(os.path.dirname(__file__))
-    logging.basicConfig(filename='settings/Pacman.log', level=logging.INFO,)
 
     use_ai = False
     if(len(sys.argv) > 1 and sys.argv[1] == 'ai'):

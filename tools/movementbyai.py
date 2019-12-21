@@ -2,11 +2,8 @@ import requests
 import math
 import time
 import json
-import logging
 import pygame
 from datetime import datetime
-
-logger = logging.getLogger(__name__)
 
 class MovementAI():
 
@@ -36,7 +33,6 @@ class MovementAI():
         if(destin_pos):
             if(self.dest_way == None):
                 c_time = time.strftime("%d %m %Y %H-%M-%S", time.gmtime())
-                logger.info(c_time + ':GP:Got package:<POS ' + str(self.transform2Geo(player_pos)) + ' TO ' + str(self.transform2Geo(destin_pos)) + 'POS>')
                 self.dest_way = self.getRoute(self.createOSRMquery(self.transform2Geo(player_pos), self.transform2Geo(destin_pos)))
             self.package_pos = None
             self.drawWay()
@@ -50,7 +46,6 @@ class MovementAI():
             self.dest_way = None
             if(not self.package_pos):
                 c_time = time.strftime("%d %m %Y %H-%M-%S", time.gmtime())
-                logger.info(c_time + ':LP:Lost package:<POS ' + str(self.transform2Geo(player_pos)) + ' TO ' + str(self.transform2Geo(package_pos)) + 'POS>')
                 self.package_pos = package_pos
                 self.way = self.getRoute(self.createOSRMquery(self.transform2Geo(player_pos), self.transform2Geo(self.package_pos)))
             if(self.package_pos != package_pos):

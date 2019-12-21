@@ -4,10 +4,7 @@ import time
 from sys import stdin, exit
 from _thread import *
 from time import sleep
-import logging
 from PodSixNet.Connection import connection, ConnectionListener
-
-logger = logging.getLogger(__name__)
 
 class Client(ConnectionListener):
 
@@ -131,7 +128,6 @@ class Client(ConnectionListener):
     def Network_startgame(self, data):
         print("Spiel gestartet")
         c_time = time.strftime("%d %m %Y %H-%M-%S", time.gmtime())
-        logger.info(c_time + ':SG:Spiel gestartet')
         self.gamestarted = True
 
     def Network_startposition(self, data):
