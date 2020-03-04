@@ -4,6 +4,9 @@
 
 This is a multiplayer version of Pacman playing in the real world. This is just like the thing google did for Pacmans annaveryers. But this is multiplayer!
 
+![Alt Text](https://github.com/hegerdes/RealWorldPacman/blob/master/docs/examples/pac1.gif?raw=true)
+
+
 You have to get an deliver packages.
 
 ## Install and Lunch
