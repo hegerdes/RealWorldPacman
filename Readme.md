@@ -1,5 +1,7 @@
 # Multiplayer Map Pacman
 
+![Python application](https://github.com/hegerdes/RealWorldPacman/workflows/Python%20application/badge.svg)
+
 ## What this is
 
 This is a multiplayer version of Pacman playing in the real world. This is just like the thing google did for Pacmans annaveryers. But this is multiplayer!
