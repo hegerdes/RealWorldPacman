@@ -137,12 +137,12 @@ class MovementGeo:
     def pfeildrehen(self, aktuellenwinkel, richtungdreh):
         pfeilbild = pygame.image.load('images/pfeilbild1.png')
         if richtungdreh == True:
-            pfeilwinkel += 1
-            pygame.transform.rotate(pfeilbild, pfeilwinkel)
+            self.pfeilwinkel += 1
+            pygame.transform.rotate(pfeilbild, self.pfeilwinkel)
         if richtungdreh == False:
-            pfeilwinkel -= 1
-            pygame.transform.rotate(pfeilbild, pfeilwinkel)
-        return pfeilwinkel
+            self.pfeilwinkel -= 1
+            pygame.transform.rotate(pfeilbild, self.pfeilwinkel)
+        return self.pfeilwinkel
 
     def move_by_geo(self, keys, gamepadButton):
         if self.punkt == True:
