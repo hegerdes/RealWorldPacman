@@ -38,4 +38,4 @@ jobs:
         pip install pytest
         pytest
     - name: Testrun
-      run: python Server.py localhost:25265 osna-small mslaw
+      run: python Server.py
