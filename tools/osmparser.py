@@ -6,7 +6,7 @@ import os
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-# from tools.bounds import Bounds
+#from tools.bounds import Bounds
 
 whitlist_tags = (
     'highway=motorway',
@@ -34,7 +34,7 @@ plot_options = {
 class OSMHandler:
     """ Interface to a OSM-File."""
 
-    def __init__(self, path, tarbuffer, bounds_min=(0, 0),
+    def __init__(self, path, bounds_min=(0, 0),
                  bounds_max=(math.inf, math.inf), usecache=True, filterlist=whitlist_tags):
         """ Config the Reader for the OSM-File.
 
@@ -72,7 +72,8 @@ class OSMHandler:
         else:
             print('No OSM cache found!\nGenerating...')
             self.osmfilehadler = OSMFileHandler()
-            self.osmfilehadler.apply_buffer(tarbuffer, 'osm')
+            #self.osmfilehadler.apply_buffer(tarbuffer, 'osm')
+            self.osmfilehadler.apply_file(path)
             self.ways = self.osmfilehadler.ways
             self.nodes = self.osmfilehadler.nodes
 
@@ -81,8 +82,8 @@ class OSMHandler:
             self.graph = self.osmfilehadler.graph.subgraph(connectedGraph)
             self.removeWays()
             nx.write_gpickle(self.graph, graphcache)
-            pickle.dump(self.ways, open(waycache, 'wb'))
-            pickle.dump(self.nodes, open(nodecache, 'wb'))
+            #pickle.dump(self.ways, open(waycache, 'wb'))
+            #pickle.dump(self.nodes, open(nodecache, 'wb'))
 
 
     def getWays(self):
@@ -96,7 +97,6 @@ class OSMHandler:
         data = dict(self.graph.nodes(data=True))
         for d in data:
             pos[d] = np.array([data[d]['lon'], data[d]['lat']])
-        print(data)
         nx.draw(self.graph, pos, **plotter_options)
         plt.show()
 
@@ -160,7 +160,7 @@ class OSMFileHandler(osm.SimpleHandler):
     def node(self, n):
         if (not n.deleted):
             # self.tag_inventory(n, "node")
-            self.nodes[n.id] = {'lat': n.location.lat, 'lon': n.location.lon}
+            #self.nodes[n.id] = {'lat': n.location.lat, 'lon': n.location.lon}
             self.graph.add_node(n.id, lat=n.location.lat, lon=n.location.lon)
             self.nodec += 1
 
@@ -188,7 +188,8 @@ class OSMFileHandler(osm.SimpleHandler):
                         else:
                             print('Out of bounds', tmp_node)
                     except KeyError:
-                        print('Key not found', node.ref)
+                        pass
+                        #print('Key not found', node.ref)
             self.ways[w.id] = copy.deepcopy(tmp)
             for i in range(0, len(tmp_nodes)-1):
                 self.graph.add_edge(tmp_nodes[i], tmp_nodes[i+1])
@@ -196,10 +197,12 @@ class OSMFileHandler(osm.SimpleHandler):
 
 
 if __name__ == "__main__":
-    osm_path = 'OSM-Data/westerberg.osm'
-    # oms_bounds = Bounds(osm_path,3,15)
-
-    # my_handlder = OSMHandler(osm_path, bounds_min=oms_bounds.get_start_gps_bounds(),bounds_max=oms_bounds.get_end_gps_bounds())
+    osm_path = '../../0.Arbeit_BM/OSM-Data/niedersachsen-latest.osm.pbf'
+    #oms_bounds = Bounds(osm_path,3,15)
+    import sys
+    my_handlder = OSMHandler(osm_path,usecache=False)
+    print(sys.getsizeof(my_handlder.getGraph))
+    my_handlder.plotGraph()
     # print(oms_bounds.get_start_gps_bounds())
     # print(oms_bounds.get_end_gps_bounds())
     # print(nx.to_dict_of_dicts(self.osmfilehadler.graph))
@@ -215,7 +218,7 @@ if __name__ == "__main__":
     #     'node_size': 1,
     #     'width': 1,
     #     }
-    # pos = nx.spring_layout()
-    # print(nx.circular_layout(self.graph))
-    # nx.draw(self.graph, **options)
+    # #pos = nx.spring_layout()
+    # print(nx.circular_layout(my_handlder.graph))
+    # nx.draw(my_handlder.graph, **options)
     # plt.show()

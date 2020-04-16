@@ -24,6 +24,7 @@ class MovementGeo:
         self.key = False
         self.einmal = False
         self.sicht = 0
+        self.pfeilwinkel = 0
         self.zeit = 0
         self.vorzuruckverweis = True
         self.tkreuzung = False
@@ -570,7 +571,7 @@ class MovementGeo:
                 # print("Randomnichtaktiv")
         if self.Random == True and keys[pygame.K_UP] == False:  # keyboard[keys.UP]==False
             if keys[pygame.K_RIGHT]:
-                winkelpfeil = drehen(self, winkelpfeil, True)
+                winkelpfeil = self.drehen(self, winkelpfeil, True)
                 # pfeil.angle-=1
                 self.winkelabstandalt = 10000  # neu
             if keys[pygame.K_LEFT]:
